@@ -85,9 +85,9 @@ public class T2DCalib extends AnalysisMonitor{
         }
         
     }
-    private Map<Coordinate, H2F> Tvstrkdocas                = new HashMap<Coordinate, H2F>();
-    private Map<Coordinate, H2F> Tvscalcdocas               = new HashMap<Coordinate, H2F>();
-    private Map<Coordinate, GraphErrors> TvstrkdocasProf    = new HashMap<Coordinate, GraphErrors>();
+    private Map<Coordinate, H2F> Tvstrkdocas                        = new HashMap<Coordinate, H2F>();
+    private Map<Coordinate, H2F> Tvscalcdocas                       = new HashMap<Coordinate, H2F>();
+    private Map<Coordinate, GraphErrors> TvstrkdocasProf            = new HashMap<Coordinate, GraphErrors>();
     private Map<Coordinate, FitFunction> TvstrkdocasFit             = new HashMap<Coordinate, FitFunction>();
     private Map<Coordinate, MnUserParameters> TvstrkdocasFitPars    = new HashMap<Coordinate, MnUserParameters>();
     public  Map<Coordinate, FitLine> TvstrkdocasFits                = new HashMap<Coordinate, FitLine>();

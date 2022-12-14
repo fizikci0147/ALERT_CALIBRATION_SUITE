@@ -28,14 +28,18 @@ public class ReadTT {
         dbprovider.disconnect();
         for (int i = 0; i < dbprovider.length("/daq/tt/dc/crate"); i++) {
             int crate = dbprovider.getInteger("/daq/tt/dc/crate", i);
-            int board = dbprovider.getInteger("/daq/tt/dc/slot", i);
+            int slot = dbprovider.getInteger("/daq/tt/dc/slot", i);
             int chan = dbprovider.getInteger("/daq/tt/dc/chan", i);
+            int sec = dbprovider.getInteger("/daq/tt/dc/sector", i);
+            int lay = dbprovider.getInteger("/daq/tt/dc/layer", i);
             int comp = dbprovider.getInteger("/daq/tt/dc/component", i);
-            
-            Crates[board - 1][chan - 1][comp - 1] = crate;
-            Boards[board - 1][chan - 1][comp - 1] = board;
-            Channels[board - 1][chan - 1][comp - 1] = chan;
-            Components[board - 41][chan - 1][chan] = comp;
+
+            Crates[sec - 1][lay - 1][comp - 1] = crate;
+            Slots[sec - 1][lay - 1][comp - 1] = slot;
+            Channels[sec - 1][lay - 1][comp - 1] = chan;
+            Sectors[crate - 41][slot - 1][chan] = sec; // Crate # starts from 41 &
+            Layers[crate - 41][slot - 1][chan] = lay;
+            Components[crate - 41][slot - 1][chan] = comp;
 		
         }
         
@@ -46,15 +50,16 @@ public class ReadTT {
         //T0s
         //T0 = new double[6][6][7][6]; //nSec*nSL*nSlots*nCables
         //T0ERR = new double[6][6][7][6]; //nSec*nSL*nSlots*nCables
-        for (int i = 0; i < dbprovider.length("/calibration/dc/time_corrections/T0Corrections/Board"); i++) {
-            int iBd = dbprovider.getInteger("/calibration/dc/time_corrections/T0Corrections/Board", i);
-            int iCh = dbprovider.getInteger("/calibration/dc/time_corrections/T0Corrections/Channel", i);
+        for (int i = 0; i < dbprovider.length("/calibration/dc/time_corrections/T0Corrections/Sector"); i++) {
+            int iSec = dbprovider.getInteger("/calibration/dc/time_corrections/T0Corrections/Sector", i);
+            int iSly = dbprovider.getInteger("/calibration/dc/time_corrections/T0Corrections/Superlayer", i);
+            int iSlot = dbprovider.getInteger("/calibration/dc/time_corrections/T0Corrections/Slot", i);
             int iCab = dbprovider.getInteger("/calibration/dc/time_corrections/T0Corrections/Cable", i);
             double t0 = dbprovider.getDouble("/calibration/dc/time_corrections/T0Corrections/T0Correction", i);
             double t0Error = dbprovider.getDouble("/calibration/dc/time_corrections/T0Corrections/T0Error", i);
 
-            T0[iBd - 1][iCh - 1][iCab - 1] = t0;
-            T0ERR[iBd - 1][iCh - 1][iCab - 1] = t0Error;
+            T0[iSec - 1][iSly - 1][iSlot - 1][iCab - 1] = t0;
+            T0ERR[iSec - 1][iSly - 1][iSlot - 1][iCab - 1] = t0Error;
             if(t0<t0min) {
                 t0min=t0;
             }
@@ -68,12 +73,13 @@ public class ReadTT {
     public static final int nLayers0to35 = 36;// Layers in each sector (0th is closest to CLAS
     public static final int nComponents = 112; // == nWires (translation table in CCDB uses
     public static final int nSectors = 6;
-    
-    public static int[][][] Crates = new int[nSectors][nLayers0to35][nComponents];
-    public static int[][][] Boards = new int[nSectors][nLayers0to35][nComponents];
-    public static int[][][] Channels = new int[nSectors][nLayers0to35][nComponents];
-    public static int[][][] Components = new int[nCrates][nSlots][nChannels];
 
+    public static int[][][] Crates = new int[nSectors][nLayers0to35][nComponents];
+    public static int[][][] Slots = new int[nSectors][nLayers0to35][nComponents];
+    public static int[][][] Channels = new int[nSectors][nLayers0to35][nComponents];
+    public static int[][][] Sectors = new int[nCrates][nSlots][nChannels];
+    public static int[][][] Layers = new int[nCrates][nSlots][nChannels];
+    public static int[][][] Components = new int[nCrates][nSlots][nChannels];
     public static final int[][] CableID = { //this needs to be changed
             //[nLayer][nLocWire] => nLocWire=16, 7 groups of 16 wires in each layer
             {1, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6}, //Layer 1
@@ -85,8 +91,8 @@ public class ReadTT {
             //===> 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
             // (Local wire ID: 0 for 1st, 16th, 32th, 48th, 64th, 80th, 96th wires)
     };
-    public static double[][][] T0 = new double[6][6][7]; //nBoards*nChannels*nCables ;
-    public static double[][][] T0ERR = new double[6][6][7]; //nBoards*nChannels*nCables ;
+    public static double[][][][] T0 = new double[6][6][7][6]; //nSec*nSL*nSlots*nCables ;
+    public static double[][][][] T0ERR = new double[6][6][7][6]; //nSec*nSL*nSlots*nCables ;
     
         
 }

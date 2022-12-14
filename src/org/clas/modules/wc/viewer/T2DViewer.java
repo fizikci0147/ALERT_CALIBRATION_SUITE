@@ -302,8 +302,8 @@ public class T2DViewer implements IDataEventListener, DetectorListener, ActionLi
     @Override
     public void dataEventAction(DataEvent event) {
     	
-       // EvioDataEvent decodedEvent = deco.DecodeEvent(event, decoder, table);
-        //decodedEvent.show();
+        //EvioDataEvent decodedEvent = deco.DecodeEvent(event, decoder, table);
+    //    decodedEvent.show();
         		
 	if(event!=null ){
 //            event.show();
